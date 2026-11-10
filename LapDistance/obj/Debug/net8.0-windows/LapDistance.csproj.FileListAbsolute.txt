@@ -1,0 +1,17 @@
+C:\Users\GLB\Documents\!УрФУ\2 курс\ООП\OOP\LapDistance\bin\Debug\net8.0-windows\LapDistance.exe
+C:\Users\GLB\Documents\!УрФУ\2 курс\ООП\OOP\LapDistance\bin\Debug\net8.0-windows\LapDistance.deps.json
+C:\Users\GLB\Documents\!УрФУ\2 курс\ООП\OOP\LapDistance\bin\Debug\net8.0-windows\LapDistance.runtimeconfig.json
+C:\Users\GLB\Documents\!УрФУ\2 курс\ООП\OOP\LapDistance\bin\Debug\net8.0-windows\LapDistance.dll
+C:\Users\GLB\Documents\!УрФУ\2 курс\ООП\OOP\LapDistance\bin\Debug\net8.0-windows\LapDistance.pdb
+C:\Users\GLB\Documents\!УрФУ\2 курс\ООП\OOP\LapDistance\obj\Debug\net8.0-windows\LapDistance.MainForm.resources
+C:\Users\GLB\Documents\!УрФУ\2 курс\ООП\OOP\LapDistance\obj\Debug\net8.0-windows\LapDistance.csproj.GenerateResource.cache
+C:\Users\GLB\Documents\!УрФУ\2 курс\ООП\OOP\LapDistance\obj\Debug\net8.0-windows\LapDistance.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\GLB\Documents\!УрФУ\2 курс\ООП\OOP\LapDistance\obj\Debug\net8.0-windows\LapDistance.AssemblyInfoInputs.cache
+C:\Users\GLB\Documents\!УрФУ\2 курс\ООП\OOP\LapDistance\obj\Debug\net8.0-windows\LapDistance.AssemblyInfo.cs
+C:\Users\GLB\Documents\!УрФУ\2 курс\ООП\OOP\LapDistance\obj\Debug\net8.0-windows\LapDistance.csproj.CoreCompileInputs.cache
+C:\Users\GLB\Documents\!УрФУ\2 курс\ООП\OOP\LapDistance\obj\Debug\net8.0-windows\LapDistance.sourcelink.json
+C:\Users\GLB\Documents\!УрФУ\2 курс\ООП\OOP\LapDistance\obj\Debug\net8.0-windows\LapDistance.dll
+C:\Users\GLB\Documents\!УрФУ\2 курс\ООП\OOP\LapDistance\obj\Debug\net8.0-windows\refint\LapDistance.dll
+C:\Users\GLB\Documents\!УрФУ\2 курс\ООП\OOP\LapDistance\obj\Debug\net8.0-windows\LapDistance.pdb
+C:\Users\GLB\Documents\!УрФУ\2 курс\ООП\OOP\LapDistance\obj\Debug\net8.0-windows\LapDistance.genruntimeconfig.cache
+C:\Users\GLB\Documents\!УрФУ\2 курс\ООП\OOP\LapDistance\obj\Debug\net8.0-windows\ref\LapDistance.dll

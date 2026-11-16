@@ -1,6 +1,6 @@
-﻿using SuuntoLapDistance.Models;
+using LapDistance.Models;
 
-namespace SuuntoLapDistance.Services
+namespace LapDistance.Services
 {
     /// <summary>
     /// Справочник кодов видов активности, используемых в поле Header.ActivityType

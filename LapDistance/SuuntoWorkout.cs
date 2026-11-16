@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace SuuntoLapDistance.Models
+namespace LapDistance.Models
 {
     // ------------------------------------------------------------------
     //  Классы модели данных, соответствующие структуре JSON-файла

@@ -1,6 +1,6 @@
-﻿using SuuntoLapDistance.Models;
+using LapDistance.Data;
 
-namespace SuuntoLapDistance.Services
+namespace LapDistance.Services
 {
     /// <summary>Какие круги включать в анализ.</summary>
     public enum LapFilter
@@ -88,95 +88,90 @@ namespace SuuntoLapDistance.Services
     /// <summary>
     /// Вариант 9. Анализ дистанции по кругам:
     /// сравнение пройденной дистанции по кругам, выявление различий между интервалами.
-    /// Источник данных – массив Windows, параметр – Distance.
+    /// Работает со списком кругов (Lap) – независимо от того, получены они
+    /// из JSON-файла или прочитаны из базы данных.
     /// </summary>
     public static class LapDistanceAnalyzer
     {
-        /// <summary>Возвращает все окна-круги тренировки (Lap и Autolap) в порядке их окончания.</summary>
-        public static List<WindowEntry> GetLaps(DeviceLog log, LapFilter filter)
+        /// <summary>Отбирает круги по фильтру в порядке их окончания.</summary>
+        public static List<Lap> FilterLaps(IEnumerable<Lap> laps, LapFilter filter)
         {
-            if (log.Windows == null) return new List<WindowEntry>();
-
-            IEnumerable<WindowEntry> laps = log.Windows.Where(w => w.Window != null && w.Window.IsLap);
-
-            laps = filter switch
+            IEnumerable<Lap> selected = filter switch
             {
-                LapFilter.Manual => laps.Where(w => w.Window!.IsManualLap),
-                LapFilter.Auto => laps.Where(w => w.Window!.IsAutoLap),
+                LapFilter.Manual => laps.Where(l => l.IsManualLap),
+                LapFilter.Auto => laps.Where(l => l.IsAutoLap),
                 _ => laps
             };
 
-            return laps.OrderBy(w => w.Time ?? DateTimeOffset.MaxValue).ToList();
+            return selected
+                .OrderBy(l => l.EndTime ?? DateTime.MaxValue)
+                .ThenBy(l => l.Number)
+                .ToList();
         }
 
-        public static bool HasManualLaps(DeviceLog log) =>
-            log.Windows?.Any(w => w.Window?.IsManualLap == true) == true;
+        public static bool HasManualLaps(IEnumerable<Lap> laps) => laps.Any(l => l.IsManualLap);
 
-        public static bool HasAutoLaps(DeviceLog log) =>
-            log.Windows?.Any(w => w.Window?.IsAutoLap == true) == true;
+        public static bool HasAutoLaps(IEnumerable<Lap> laps) => laps.Any(l => l.IsAutoLap);
 
         /// <summary>Выполняет анализ дистанции по кругам.</summary>
-        public static LapDistanceResult Analyze(DeviceLog log, LapFilter filter)
+        /// <param name="laps">Круги тренировки.</param>
+        /// <param name="filter">Какие круги анализировать.</param>
+        /// <param name="autoLapDistance">Настроенная дистанция автокруга, м (для пометки неполных).</param>
+        public static LapDistanceResult Analyze(IEnumerable<Lap> laps, LapFilter filter, double? autoLapDistance)
         {
             var result = new LapDistanceResult();
+            List<Lap> selected = FilterLaps(laps, filter);
 
-            // Берём только круги, для которых известна дистанция
-            var laps = GetLaps(log, filter)
-                .Where(w => w.Window!.Distance.HasValue)
-                .ToList();
-
-            if (laps.Count == 0)
+            if (selected.Count == 0)
                 return result;
 
-            double? autoLapDistance = log.Header?.Settings?.AutoLap?.Distance;
-
-            double total = laps.Sum(w => w.Window!.Distance!.Value);
-            double average = total / laps.Count;
-            double min = laps.Min(w => w.Window!.Distance!.Value);
-            double max = laps.Max(w => w.Window!.Distance!.Value);
-            double variance = laps.Average(w => Math.Pow(w.Window!.Distance!.Value - average, 2));
+            double total = selected.Sum(l => l.Distance);
+            double average = total / selected.Count;
+            double min = selected.Min(l => l.Distance);
+            double max = selected.Max(l => l.Distance);
+            double variance = selected.Average(l => Math.Pow(l.Distance - average, 2));
 
             double cumulative = 0;
             double? previous = null;
             int minLap = 0, maxLap = 0;
 
-            for (int i = 0; i < laps.Count; i++)
+            for (int i = 0; i < selected.Count; i++)
             {
-                WorkoutWindow w = laps[i].Window!;
-                double distance = w.Distance!.Value;
+                Lap lap = selected[i];
+                double distance = lap.Distance;
                 cumulative += distance;
 
                 var row = new LapDistanceRow
                 {
                     Number = i + 1,
-                    LapType = w.IsAutoLap ? "Автокруг" : "Ручной",
-                    EndTime = laps[i].Time?.ToString("HH:mm:ss") ?? "—",
-                    DurationText = FormatDuration(w.Duration),
+                    LapType = lap.IsAutoLap ? "Автокруг" : "Ручной",
+                    EndTime = lap.EndTime?.ToString("HH:mm:ss") ?? "—",
+                    DurationText = FormatDuration(lap.Duration),
                     Distance = distance,
                     DeviationFromAverage = distance - average,
                     DeviationFromAveragePercent = average > 0 ? (distance - average) / average * 100 : 0,
                     DifferenceFromPrevious = previous.HasValue ? distance - previous.Value : null,
                     ShareOfTotal = total > 0 ? distance / total * 100 : 0,
                     CumulativeDistance = cumulative,
-                    AverageSpeedKmh = w.Speed?.FirstOrDefault()?.Avg is double v ? v * 3.6 : null
+                    AverageSpeedKmh = lap.AvgSpeed is double v ? v * 3.6 : null
                 };
 
                 var notes = new List<string>();
                 // Отмечаем только первый круг с максимальной/минимальной дистанцией
-                if (distance == max && maxLap == 0 && laps.Count > 1)
+                if (distance == max && maxLap == 0 && selected.Count > 1)
                 {
                     row.IsLongest = true;
                     maxLap = row.Number;
                     notes.Add("самый длинный");
                 }
-                if (distance == min && minLap == 0 && laps.Count > 1)
+                if (distance == min && minLap == 0 && selected.Count > 1)
                 {
                     row.IsShortest = true;
                     minLap = row.Number;
                     notes.Add("самый короткий");
                 }
                 // Последний автокруг обычно короче заданной дистанции автокруга
-                if (w.IsAutoLap && autoLapDistance is > 0 && distance < autoLapDistance.Value * 0.98)
+                if (lap.IsAutoLap && autoLapDistance is > 0 && distance < autoLapDistance.Value * 0.98)
                     notes.Add($"неполный автокруг (из {autoLapDistance.Value:N0} м)");
 
                 row.Note = string.Join(", ", notes);
@@ -186,7 +181,7 @@ namespace SuuntoLapDistance.Services
 
             result.Summary = new LapDistanceSummary
             {
-                Count = laps.Count,
+                Count = selected.Count,
                 TotalDistance = total,
                 AverageDistance = average,
                 MinDistance = min,

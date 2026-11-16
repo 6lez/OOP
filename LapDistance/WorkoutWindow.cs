@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace SuuntoLapDistance.Models
+namespace LapDistance.Models
 {
     /// <summary>
     /// Элемент массива "Windows". Каждое окно – это агрегированные показатели

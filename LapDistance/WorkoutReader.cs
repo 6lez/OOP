@@ -1,7 +1,7 @@
-﻿using System.Text.Json;
-using SuuntoLapDistance.Models;
+using System.Text.Json;
+using LapDistance.Models;
 
-namespace SuuntoLapDistance.Services
+namespace LapDistance.Services
 {
     /// <summary>
     /// Исключение, означающее, что файл прочитан, но его содержимое

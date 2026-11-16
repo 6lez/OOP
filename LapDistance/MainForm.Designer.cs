@@ -33,33 +33,38 @@
             lblFileName = new Label();
             openFileDialog = new OpenFileDialog();
             grpInfo = new GroupBox();
-            lblActivityCaption = new Label();
-            lblDurationCaption = new Label();
-            lblEnergyCaption = new Label();
-            lblAscentCaption = new Label();
-            lblSpeedCaption = new Label();
-            lblDeviceCaption = new Label();
-            lblHrCaption = new Label();
-            lblStepsCaption = new Label();
-            lblDistanceCaption = new Label();
-            lblDateCaption = new Label();
-            lblSpeed = new Label();
-            lblAscent = new Label();
-            lblEnergy = new Label();
-            lblDuration = new Label();
-            lblActivity = new Label();
             lblDevice = new Label();
             lblHr = new Label();
             lblSteps = new Label();
             lblDistance = new Label();
             lblDate = new Label();
+            lblSpeed = new Label();
+            lblDeviceCaption = new Label();
+            lblAscent = new Label();
+            lblSpeedCaption = new Label();
+            lblEnergy = new Label();
+            lblDuration = new Label();
+            lblHrCaption = new Label();
+            lblActivity = new Label();
+            lblAscentCaption = new Label();
+            lblStepsCaption = new Label();
+            lblDistanceCaption = new Label();
+            lblEnergyCaption = new Label();
+            lblDateCaption = new Label();
+            lblDurationCaption = new Label();
+            lblActivityCaption = new Label();
             grpLaps = new GroupBox();
-            lblLapFilterCaption = new Label();
-            lblSummary = new Label();
-            cmbLapFilter = new ComboBox();
             dgvLaps = new DataGridView();
+            cmbLapFilter = new ComboBox();
+            lblSummary = new Label();
+            lblLapFilterCaption = new Label();
             grpMessages = new GroupBox();
             txtMessages = new TextBox();
+            btnSaveToDb = new Button();
+            lblDataSource = new Label();
+            lblSavedCaption = new Label();
+            cmbSavedWorkouts = new ComboBox();
+            btnLoadFromDb = new Button();
             grpInfo.SuspendLayout();
             grpLaps.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvLaps).BeginInit();
@@ -126,152 +131,12 @@
             grpInfo.Controls.Add(lblDateCaption);
             grpInfo.Controls.Add(lblDurationCaption);
             grpInfo.Controls.Add(lblActivityCaption);
-            grpInfo.Location = new Point(12, 52);
+            grpInfo.Location = new Point(12, 115);
             grpInfo.Name = "grpInfo";
             grpInfo.Size = new Size(1060, 150);
             grpInfo.TabIndex = 3;
             grpInfo.TabStop = false;
             grpInfo.Text = "Общая информация о тренировке";
-            // 
-            // lblActivityCaption
-            // 
-            lblActivityCaption.AutoSize = true;
-            lblActivityCaption.Location = new Point(12, 25);
-            lblActivityCaption.Name = "lblActivityCaption";
-            lblActivityCaption.Size = new Size(95, 15);
-            lblActivityCaption.TabIndex = 0;
-            lblActivityCaption.Text = "Вид активности:";
-            // 
-            // lblDurationCaption
-            // 
-            lblDurationCaption.AutoSize = true;
-            lblDurationCaption.Location = new Point(12, 49);
-            lblDurationCaption.Name = "lblDurationCaption";
-            lblDurationCaption.Size = new Size(124, 15);
-            lblDurationCaption.TabIndex = 1;
-            lblDurationCaption.Text = "Продолжительность:";
-            // 
-            // lblEnergyCaption
-            // 
-            lblEnergyCaption.AutoSize = true;
-            lblEnergyCaption.Location = new Point(12, 73);
-            lblEnergyCaption.Name = "lblEnergyCaption";
-            lblEnergyCaption.Size = new Size(92, 15);
-            lblEnergyCaption.TabIndex = 2;
-            lblEnergyCaption.Text = "Энергозатраты:";
-            // 
-            // lblAscentCaption
-            // 
-            lblAscentCaption.AutoSize = true;
-            lblAscentCaption.Location = new Point(12, 97);
-            lblAscentCaption.Name = "lblAscentCaption";
-            lblAscentCaption.Size = new Size(135, 15);
-            lblAscentCaption.TabIndex = 3;
-            lblAscentCaption.Text = "Набор / сброс высоты:";
-            // 
-            // lblSpeedCaption
-            // 
-            lblSpeedCaption.AutoSize = true;
-            lblSpeedCaption.Location = new Point(12, 121);
-            lblSpeedCaption.Name = "lblSpeedCaption";
-            lblSpeedCaption.Size = new Size(147, 15);
-            lblSpeedCaption.TabIndex = 4;
-            lblSpeedCaption.Text = "Средняя скорость / темп:";
-            // 
-            // lblDeviceCaption
-            // 
-            lblDeviceCaption.AutoSize = true;
-            lblDeviceCaption.Location = new Point(540, 121);
-            lblDeviceCaption.Name = "lblDeviceCaption";
-            lblDeviceCaption.Size = new Size(73, 15);
-            lblDeviceCaption.TabIndex = 9;
-            lblDeviceCaption.Text = "Устройство:";
-            // 
-            // lblHrCaption
-            // 
-            lblHrCaption.AutoSize = true;
-            lblHrCaption.Location = new Point(540, 97);
-            lblHrCaption.Name = "lblHrCaption";
-            lblHrCaption.Size = new Size(142, 15);
-            lblHrCaption.TabIndex = 8;
-            lblHrCaption.Text = "Пульс (средний / макс.):";
-            // 
-            // lblStepsCaption
-            // 
-            lblStepsCaption.AutoSize = true;
-            lblStepsCaption.Location = new Point(540, 73);
-            lblStepsCaption.Name = "lblStepsCaption";
-            lblStepsCaption.Size = new Size(113, 15);
-            lblStepsCaption.TabIndex = 7;
-            lblStepsCaption.Text = "Количество шагов:";
-            // 
-            // lblDistanceCaption
-            // 
-            lblDistanceCaption.AutoSize = true;
-            lblDistanceCaption.Location = new Point(540, 49);
-            lblDistanceCaption.Name = "lblDistanceCaption";
-            lblDistanceCaption.Size = new Size(69, 15);
-            lblDistanceCaption.TabIndex = 6;
-            lblDistanceCaption.Text = "Дистанция:";
-            // 
-            // lblDateCaption
-            // 
-            lblDateCaption.AutoSize = true;
-            lblDateCaption.Location = new Point(540, 25);
-            lblDateCaption.Name = "lblDateCaption";
-            lblDateCaption.Size = new Size(124, 15);
-            lblDateCaption.TabIndex = 5;
-            lblDateCaption.Text = "Дата и время начала:";
-            // 
-            // lblSpeed
-            // 
-            lblSpeed.AutoSize = true;
-            lblSpeed.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblSpeed.Location = new Point(190, 121);
-            lblSpeed.Name = "lblSpeed";
-            lblSpeed.Size = new Size(19, 15);
-            lblSpeed.TabIndex = 9;
-            lblSpeed.Text = "—";
-            // 
-            // lblAscent
-            // 
-            lblAscent.AutoSize = true;
-            lblAscent.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblAscent.Location = new Point(190, 97);
-            lblAscent.Name = "lblAscent";
-            lblAscent.Size = new Size(19, 15);
-            lblAscent.TabIndex = 8;
-            lblAscent.Text = "—";
-            // 
-            // lblEnergy
-            // 
-            lblEnergy.AutoSize = true;
-            lblEnergy.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblEnergy.Location = new Point(190, 73);
-            lblEnergy.Name = "lblEnergy";
-            lblEnergy.Size = new Size(19, 15);
-            lblEnergy.TabIndex = 7;
-            lblEnergy.Text = "—";
-            // 
-            // lblDuration
-            // 
-            lblDuration.AutoSize = true;
-            lblDuration.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblDuration.Location = new Point(190, 49);
-            lblDuration.Name = "lblDuration";
-            lblDuration.Size = new Size(19, 15);
-            lblDuration.TabIndex = 6;
-            lblDuration.Text = "—";
-            // 
-            // lblActivity
-            // 
-            lblActivity.AutoSize = true;
-            lblActivity.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblActivity.Location = new Point(190, 25);
-            lblActivity.Name = "lblActivity";
-            lblActivity.Size = new Size(19, 15);
-            lblActivity.TabIndex = 5;
-            lblActivity.Text = "—";
             // 
             // lblDevice
             // 
@@ -323,6 +188,146 @@
             lblDate.TabIndex = 10;
             lblDate.Text = "—";
             // 
+            // lblSpeed
+            // 
+            lblSpeed.AutoSize = true;
+            lblSpeed.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblSpeed.Location = new Point(190, 121);
+            lblSpeed.Name = "lblSpeed";
+            lblSpeed.Size = new Size(19, 15);
+            lblSpeed.TabIndex = 9;
+            lblSpeed.Text = "—";
+            // 
+            // lblDeviceCaption
+            // 
+            lblDeviceCaption.AutoSize = true;
+            lblDeviceCaption.Location = new Point(540, 121);
+            lblDeviceCaption.Name = "lblDeviceCaption";
+            lblDeviceCaption.Size = new Size(73, 15);
+            lblDeviceCaption.TabIndex = 9;
+            lblDeviceCaption.Text = "Устройство:";
+            // 
+            // lblAscent
+            // 
+            lblAscent.AutoSize = true;
+            lblAscent.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblAscent.Location = new Point(190, 97);
+            lblAscent.Name = "lblAscent";
+            lblAscent.Size = new Size(19, 15);
+            lblAscent.TabIndex = 8;
+            lblAscent.Text = "—";
+            // 
+            // lblSpeedCaption
+            // 
+            lblSpeedCaption.AutoSize = true;
+            lblSpeedCaption.Location = new Point(12, 121);
+            lblSpeedCaption.Name = "lblSpeedCaption";
+            lblSpeedCaption.Size = new Size(147, 15);
+            lblSpeedCaption.TabIndex = 4;
+            lblSpeedCaption.Text = "Средняя скорость / темп:";
+            // 
+            // lblEnergy
+            // 
+            lblEnergy.AutoSize = true;
+            lblEnergy.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblEnergy.Location = new Point(190, 73);
+            lblEnergy.Name = "lblEnergy";
+            lblEnergy.Size = new Size(19, 15);
+            lblEnergy.TabIndex = 7;
+            lblEnergy.Text = "—";
+            // 
+            // lblDuration
+            // 
+            lblDuration.AutoSize = true;
+            lblDuration.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblDuration.Location = new Point(190, 49);
+            lblDuration.Name = "lblDuration";
+            lblDuration.Size = new Size(19, 15);
+            lblDuration.TabIndex = 6;
+            lblDuration.Text = "—";
+            // 
+            // lblHrCaption
+            // 
+            lblHrCaption.AutoSize = true;
+            lblHrCaption.Location = new Point(540, 97);
+            lblHrCaption.Name = "lblHrCaption";
+            lblHrCaption.Size = new Size(142, 15);
+            lblHrCaption.TabIndex = 8;
+            lblHrCaption.Text = "Пульс (средний / макс.):";
+            // 
+            // lblActivity
+            // 
+            lblActivity.AutoSize = true;
+            lblActivity.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblActivity.Location = new Point(190, 25);
+            lblActivity.Name = "lblActivity";
+            lblActivity.Size = new Size(19, 15);
+            lblActivity.TabIndex = 5;
+            lblActivity.Text = "—";
+            // 
+            // lblAscentCaption
+            // 
+            lblAscentCaption.AutoSize = true;
+            lblAscentCaption.Location = new Point(12, 97);
+            lblAscentCaption.Name = "lblAscentCaption";
+            lblAscentCaption.Size = new Size(135, 15);
+            lblAscentCaption.TabIndex = 3;
+            lblAscentCaption.Text = "Набор / сброс высоты:";
+            // 
+            // lblStepsCaption
+            // 
+            lblStepsCaption.AutoSize = true;
+            lblStepsCaption.Location = new Point(540, 73);
+            lblStepsCaption.Name = "lblStepsCaption";
+            lblStepsCaption.Size = new Size(113, 15);
+            lblStepsCaption.TabIndex = 7;
+            lblStepsCaption.Text = "Количество шагов:";
+            // 
+            // lblDistanceCaption
+            // 
+            lblDistanceCaption.AutoSize = true;
+            lblDistanceCaption.Location = new Point(540, 49);
+            lblDistanceCaption.Name = "lblDistanceCaption";
+            lblDistanceCaption.Size = new Size(69, 15);
+            lblDistanceCaption.TabIndex = 6;
+            lblDistanceCaption.Text = "Дистанция:";
+            // 
+            // lblEnergyCaption
+            // 
+            lblEnergyCaption.AutoSize = true;
+            lblEnergyCaption.Location = new Point(12, 73);
+            lblEnergyCaption.Name = "lblEnergyCaption";
+            lblEnergyCaption.Size = new Size(92, 15);
+            lblEnergyCaption.TabIndex = 2;
+            lblEnergyCaption.Text = "Энергозатраты:";
+            // 
+            // lblDateCaption
+            // 
+            lblDateCaption.AutoSize = true;
+            lblDateCaption.Location = new Point(540, 25);
+            lblDateCaption.Name = "lblDateCaption";
+            lblDateCaption.Size = new Size(124, 15);
+            lblDateCaption.TabIndex = 5;
+            lblDateCaption.Text = "Дата и время начала:";
+            // 
+            // lblDurationCaption
+            // 
+            lblDurationCaption.AutoSize = true;
+            lblDurationCaption.Location = new Point(12, 49);
+            lblDurationCaption.Name = "lblDurationCaption";
+            lblDurationCaption.Size = new Size(124, 15);
+            lblDurationCaption.TabIndex = 1;
+            lblDurationCaption.Text = "Продолжительность:";
+            // 
+            // lblActivityCaption
+            // 
+            lblActivityCaption.AutoSize = true;
+            lblActivityCaption.Location = new Point(12, 25);
+            lblActivityCaption.Name = "lblActivityCaption";
+            lblActivityCaption.Size = new Size(95, 15);
+            lblActivityCaption.TabIndex = 0;
+            lblActivityCaption.Text = "Вид активности:";
+            // 
             // grpLaps
             // 
             grpLaps.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
@@ -330,41 +335,12 @@
             grpLaps.Controls.Add(cmbLapFilter);
             grpLaps.Controls.Add(lblSummary);
             grpLaps.Controls.Add(lblLapFilterCaption);
-            grpLaps.Location = new Point(12, 210);
+            grpLaps.Location = new Point(12, 271);
             grpLaps.Name = "grpLaps";
-            grpLaps.Size = new Size(1060, 395);
+            grpLaps.Size = new Size(1060, 464);
             grpLaps.TabIndex = 4;
             grpLaps.TabStop = false;
             grpLaps.Text = "Анализ дистанции по кругам";
-            // 
-            // lblLapFilterCaption
-            // 
-            lblLapFilterCaption.AutoSize = true;
-            lblLapFilterCaption.Location = new Point(12, 27);
-            lblLapFilterCaption.Name = "lblLapFilterCaption";
-            lblLapFilterCaption.Size = new Size(134, 15);
-            lblLapFilterCaption.TabIndex = 0;
-            lblLapFilterCaption.Text = "Анализируемые круги:";
-            // 
-            // lblSummary
-            // 
-            lblSummary.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            lblSummary.Location = new Point(12, 58);
-            lblSummary.Name = "lblSummary";
-            lblSummary.Size = new Size(1035, 36);
-            lblSummary.TabIndex = 1;
-            lblSummary.Text = "Сводка по кругам появится после загрузки файла.";
-            // 
-            // cmbLapFilter
-            // 
-            cmbLapFilter.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbLapFilter.Enabled = false;
-            cmbLapFilter.FormattingEnabled = true;
-            cmbLapFilter.Location = new Point(160, 23);
-            cmbLapFilter.Name = "cmbLapFilter";
-            cmbLapFilter.Size = new Size(121, 23);
-            cmbLapFilter.TabIndex = 2;
-            cmbLapFilter.SelectedIndexChanged += cmbLapFilter_SelectedIndexChanged;
             // 
             // dgvLaps
             // 
@@ -381,14 +357,43 @@
             dgvLaps.ReadOnly = true;
             dgvLaps.RowHeadersVisible = false;
             dgvLaps.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvLaps.Size = new Size(1035, 284);
+            dgvLaps.Size = new Size(1035, 353);
             dgvLaps.TabIndex = 3;
+            // 
+            // cmbLapFilter
+            // 
+            cmbLapFilter.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbLapFilter.Enabled = false;
+            cmbLapFilter.FormattingEnabled = true;
+            cmbLapFilter.Location = new Point(160, 23);
+            cmbLapFilter.Name = "cmbLapFilter";
+            cmbLapFilter.Size = new Size(121, 23);
+            cmbLapFilter.TabIndex = 2;
+            cmbLapFilter.SelectedIndexChanged += cmbLapFilter_SelectedIndexChanged;
+            // 
+            // lblSummary
+            // 
+            lblSummary.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            lblSummary.Location = new Point(12, 58);
+            lblSummary.Name = "lblSummary";
+            lblSummary.Size = new Size(1035, 36);
+            lblSummary.TabIndex = 1;
+            lblSummary.Text = "Сводка по кругам появится после загрузки файла.";
+            // 
+            // lblLapFilterCaption
+            // 
+            lblLapFilterCaption.AutoSize = true;
+            lblLapFilterCaption.Location = new Point(12, 27);
+            lblLapFilterCaption.Name = "lblLapFilterCaption";
+            lblLapFilterCaption.Size = new Size(134, 15);
+            lblLapFilterCaption.TabIndex = 0;
+            lblLapFilterCaption.Text = "Анализируемые круги:";
             // 
             // grpMessages
             // 
             grpMessages.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             grpMessages.Controls.Add(txtMessages);
-            grpMessages.Location = new Point(12, 612);
+            grpMessages.Location = new Point(12, 742);
             grpMessages.Name = "grpMessages";
             grpMessages.Size = new Size(1060, 88);
             grpMessages.TabIndex = 5;
@@ -408,11 +413,67 @@
             txtMessages.TabIndex = 0;
             txtMessages.Text = "Выберите JSON-файл тренировки с помощью кнопки «Открыть файл тренировки...».";
             // 
+            // btnSaveToDb
+            // 
+            btnSaveToDb.Enabled = false;
+            btnSaveToDb.Location = new Point(440, 12);
+            btnSaveToDb.Name = "btnSaveToDb";
+            btnSaveToDb.Size = new Size(140, 32);
+            btnSaveToDb.TabIndex = 6;
+            btnSaveToDb.Text = "Сохранить в БД";
+            btnSaveToDb.UseVisualStyleBackColor = true;
+            btnSaveToDb.Click += btnSaveToDb_Click;
+            // 
+            // lblDataSource
+            // 
+            lblDataSource.AutoSize = true;
+            lblDataSource.Location = new Point(595, 20);
+            lblDataSource.Name = "lblDataSource";
+            lblDataSource.Size = new Size(0, 15);
+            lblDataSource.TabIndex = 7;
+            // 
+            // lblSavedCaption
+            // 
+            lblSavedCaption.AutoSize = true;
+            lblSavedCaption.Location = new Point(12, 60);
+            lblSavedCaption.Name = "lblSavedCaption";
+            lblSavedCaption.Size = new Size(154, 15);
+            lblSavedCaption.TabIndex = 8;
+            lblSavedCaption.Text = "Сохранённые тренировки:";
+            // 
+            // cmbSavedWorkouts
+            // 
+            cmbSavedWorkouts.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            cmbSavedWorkouts.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbSavedWorkouts.Enabled = false;
+            cmbSavedWorkouts.FormattingEnabled = true;
+            cmbSavedWorkouts.Location = new Point(191, 57);
+            cmbSavedWorkouts.Name = "cmbSavedWorkouts";
+            cmbSavedWorkouts.Size = new Size(560, 23);
+            cmbSavedWorkouts.TabIndex = 9;
+            // 
+            // btnLoadFromDb
+            // 
+            btnLoadFromDb.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnLoadFromDb.Enabled = false;
+            btnLoadFromDb.Location = new Point(758, 51);
+            btnLoadFromDb.Name = "btnLoadFromDb";
+            btnLoadFromDb.Size = new Size(150, 32);
+            btnLoadFromDb.TabIndex = 10;
+            btnLoadFromDb.Text = "Загрузить из БД";
+            btnLoadFromDb.UseVisualStyleBackColor = true;
+            btnLoadFromDb.Click += btnLoadFromDb_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1084, 711);
+            ClientSize = new Size(1084, 841);
+            Controls.Add(btnLoadFromDb);
+            Controls.Add(cmbSavedWorkouts);
+            Controls.Add(lblSavedCaption);
+            Controls.Add(lblDataSource);
+            Controls.Add(btnSaveToDb);
             Controls.Add(grpMessages);
             Controls.Add(grpLaps);
             Controls.Add(grpInfo);
@@ -423,6 +484,7 @@
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Анализ дистанции по кругам";
+            Load += MainForm_Load;
             grpInfo.ResumeLayout(false);
             grpInfo.PerformLayout();
             grpLaps.ResumeLayout(false);
@@ -468,5 +530,10 @@
         private Label lblLapFilterCaption;
         private GroupBox grpMessages;
         private TextBox txtMessages;
+        private Button btnSaveToDb;
+        private Label lblDataSource;
+        private Label lblSavedCaption;
+        private ComboBox cmbSavedWorkouts;
+        private Button btnLoadFromDb;
     }
 }

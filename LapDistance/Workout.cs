@@ -1,3 +1,4 @@
+using LapDistance.Data;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -76,6 +77,18 @@ namespace LapDistance.Data
 
         /// <summary>Круги тренировки (данные индивидуального варианта 9).</summary>
         public List<Lap> Laps { get; set; } = new();
+
+        /// <summary>Количество кругов (для вывода в таблице).</summary>
+        [NotMapped]
+        public int LapCount => Laps.Count;
+
+        /// <summary>Продолжительность в виде ч:мм:сс (для вывода в таблице).</summary>
+        [NotMapped]
+        public string DurationText => TimeSpan.FromSeconds(Duration).ToString(@"h\:mm\:ss");
+
+        /// <summary>Дистанция в километрах (для вывода в таблице).</summary>
+        [NotMapped]
+        public double DistanceKm => Distance / 1000;
 
         /// <summary>Подпись для выпадающего списка сохранённых тренировок.</summary>
         [NotMapped]

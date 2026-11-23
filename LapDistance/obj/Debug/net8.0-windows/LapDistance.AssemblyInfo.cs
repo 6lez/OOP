@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LapDistance")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0c9fb24ecd0b58ff5be38451399cd11d9afd6c0d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+843c777de4ed9001c3b0ae84f2a31f60f44d5f64")]
 [assembly: System.Reflection.AssemblyProductAttribute("LapDistance")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LapDistance")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

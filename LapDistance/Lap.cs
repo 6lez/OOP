@@ -1,3 +1,4 @@
+using LapDistance.Data;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -41,6 +42,14 @@ namespace LapDistance.Data
 
         /// <summary>Средний пульс на круге, уд/мин.</summary>
         public double? AvgHeartRate { get; set; }
+
+        /// <summary>Средняя скорость, км/ч (для вывода в таблице).</summary>
+        [NotMapped]
+        public double? AvgSpeedKmh => AvgSpeed * 3.6;
+
+        /// <summary>Название тренировки, к которой относится круг (если она загружена).</summary>
+        [NotMapped]
+        public string WorkoutName => Workout == null ? $"#{WorkoutId}" : $"{Workout.StartTime:dd.MM.yyyy} {Workout.ActivityName}";
 
         [NotMapped]
         public bool IsAutoLap => string.Equals(LapType, TypeAuto, StringComparison.OrdinalIgnoreCase);

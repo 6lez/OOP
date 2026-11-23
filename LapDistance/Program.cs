@@ -1,3 +1,6 @@
+using LapDistance;
+using LapDistance.Data;
+using LapDistance.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using LapDistance.Data;
@@ -23,10 +26,11 @@ namespace LapDistance
             services.AddDbContext<WorkoutContext>(options =>
                 options.UseSqlite($"Data Source={dbPath}"));
 
-            // 2. Сервис работы с тренировками (получает WorkoutContext через конструктор)
-            services.AddTransient<WorkoutService>();
+            // 2. Обобщённый сервис: одна регистрация открытого типа Service<> позволяет
+            //    получать из контейнера Service<Workout>, Service<Lap> и любой другой Service<T>
+            services.AddTransient(typeof(Service<>));
 
-            // 3. Форма, использующая сервис (получает WorkoutService через конструктор)
+            // 3. Форма, использующая сервисы (получает Service<Workout> и Service<Lap> через конструктор)
             services.AddTransient<MainForm>();
 
             using ServiceProvider serviceProvider = services.BuildServiceProvider();
@@ -34,7 +38,7 @@ namespace LapDistance
             // Создаём базу данных и таблицы при первом запуске
             try
             {
-                serviceProvider.GetRequiredService<WorkoutService>().EnsureDatabaseCreated();
+                serviceProvider.GetRequiredService<WorkoutContext>().Database.EnsureCreated();
             }
             catch (Exception ex)
             {

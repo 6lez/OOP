@@ -14,10 +14,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{C8C8EEFB-CB91-4EFD-97CA-58B95AA171B1}"
 	ProjectSection(SolutionItems) = preProject
 		ActivityTypes.cs = ActivityTypes.cs
+		EntityFilters.cs = EntityFilters.cs
 		LapDistanceAnalyzer.cs = LapDistanceAnalyzer.cs
+		Service.cs = Service.cs
 		WorkoutMapper.cs = WorkoutMapper.cs
 		WorkoutReader.cs = WorkoutReader.cs
-		WorkoutService.cs = WorkoutService.cs
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{C1EC606C-909B-4C48-9736-51CED56F3752}"

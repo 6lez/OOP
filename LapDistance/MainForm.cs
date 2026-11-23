@@ -1,21 +1,28 @@
 ﻿using LapDistance.Data;
 using LapDistance.Models;
 using LapDistance.Services;
+using System.Data.Common;
 using System.Text.Json;
+using System.Windows.Forms;
 
 namespace LapDistance
 {
     /// <summary>
     /// Главная форма приложения: выбор JSON-файла, сохранение тренировки в базу данных,
     /// выбор ранее сохранённой тренировки, вывод общей информации и таблицы
-    /// анализа дистанции по кругам (вариант 9).
+    /// анализа дистанции по кругам (вариант 9), а также демонстрация обобщённого
+    /// сервиса Service&lt;T&gt; и фильтрации с Predicate&lt;T&gt; (ПР3).
     ///
-    /// Форма НЕ обращается к DbContext – только к методам WorkoutService,
-    /// который передаётся через конструктор (Dependency Injection).
+    /// Форма НЕ обращается к DbContext – только к методам Service&lt;Workout&gt; и Service&lt;Lap&gt;,
+    /// которые передаются через конструктор (Dependency Injection).
     /// </summary>
     public partial class MainForm : Form
     {
-        private readonly WorkoutService _workoutService;
+        /// <summary>Обобщённый сервис для сущности «тренировка».</summary>
+        private readonly Service<Workout> _workoutService;
+
+        /// <summary>Тот же обобщённый сервис, но для сущности «круг».</summary>
+        private readonly Service<Lap> _lapService;
 
         /// <summary>Текущая отображаемая тренировка (из JSON или из БД).</summary>
         private Workout? _current;
@@ -29,10 +36,17 @@ namespace LapDistance
             public override string ToString() => Title;
         }
 
-        /// <summary>Конструктор. Сервис подставляет контейнер DI (см. Program.cs).</summary>
-        public MainForm(WorkoutService workoutService)
+        /// <summary>Элемент списка «Сущность» на вкладке ПР3.</summary>
+        private sealed record EntityTypeItem(Type EntityType, string Title)
+        {
+            public override string ToString() => Title;
+        }
+
+        /// <summary>Конструктор. Оба сервиса подставляет контейнер DI (см. Program.cs).</summary>
+        public MainForm(Service<Workout> workoutService, Service<Lap> lapService)
         {
             _workoutService = workoutService;
+            _lapService = lapService;
             InitializeComponent();
             ConfigureGridColumns();
         }
@@ -40,6 +54,7 @@ namespace LapDistance
         private void MainForm_Load(object? sender, EventArgs e)
         {
             RefreshSavedWorkouts();
+            SetupEntityTab();
             string? dbPath = SafeGetDatabasePath();
             ShowInfo("Выберите JSON-файл тренировки или загрузите ранее сохранённую тренировку из базы данных." +
                      (dbPath != null ? Environment.NewLine + "База данных: " + dbPath : ""));
@@ -121,7 +136,10 @@ namespace LapDistance
 
             try
             {
-                if (_workoutService.Exists(_current))
+                // Проверка дубликата – фильтрация через Predicate<Workout> (лямбда-выражение)
+                DateTime start = _current.StartTime;
+                int? type = _current.ActivityType;
+                if (_workoutService.Any(w => w.StartTime == start && w.ActivityType == type))
                 {
                     DialogResult answer = MessageBox.Show(this,
                         "Тренировка с такими же датой начала и видом активности уже есть в базе данных.\n" +
@@ -132,12 +150,14 @@ namespace LapDistance
                 }
 
                 Cursor = Cursors.WaitCursor;
-                int id = _workoutService.Add(_current);
+                _workoutService.Add(_current);     // круги сохраняются вместе с тренировкой
+                int id = _current.Id;              // Id присвоен базой данных
 
                 // Дальнейшая работа с тренировкой – через базу данных:
                 // обновляем список и показываем только что сохранённую запись уже из БД
                 RefreshSavedWorkouts(selectId: id);
                 LoadWorkoutFromDatabase(id);
+                RefreshEntityGrid();
                 ShowInfo($"Тренировка сохранена в базе данных (Id = {id}, кругов: {_current?.Laps.Count ?? 0}). " +
                          "Сейчас отображаются данные, прочитанные из базы.");
             }
@@ -172,13 +192,21 @@ namespace LapDistance
             try
             {
                 Cursor = Cursors.WaitCursor;
-                Workout? workout = _workoutService.GetById(id);
+                // Тренировка вместе с кругами (Include Laps)
+                Workout? workout = _workoutService.GetById(id, w => w.Laps);
                 if (workout == null)
                 {
                     ShowWarning($"Тренировка с Id = {id} не найдена в базе данных.");
                     RefreshSavedWorkouts();
                     return;
                 }
+
+                // Круги – в порядке их окончания
+                workout.Laps.Sort((a, b) =>
+                {
+                    int byTime = Nullable.Compare(a.EndTime, b.EndTime);
+                    return byTime != 0 ? byTime : a.Number.CompareTo(b.Number);
+                });
 
                 lblFileName.Text = workout.FileName;
                 lblFileName.ForeColor = SystemColors.ControlText;
@@ -200,7 +228,10 @@ namespace LapDistance
         {
             try
             {
-                List<Workout> saved = _workoutService.GetAll();
+                List<Workout> saved = _workoutService
+                    .GetAll(w => w.Laps)                       // нужны для подсчёта кругов в подписи
+                    .OrderByDescending(w => w.StartTime)
+                    .ToList();
 
                 cmbSavedWorkouts.BeginUpdate();
                 cmbSavedWorkouts.Items.Clear();
@@ -433,6 +464,191 @@ namespace LapDistance
                     dgvLaps.Rows[i].DefaultCellStyle.BackColor = Color.FromArgb(252, 226, 226);
             }
             dgvLaps.ClearSelection();
+        }
+
+        // ------------------------------------------------------------------
+        //  ПР3. Обобщённый сервис Service<T> и фильтрация Predicate<T>
+        // ------------------------------------------------------------------
+
+        /// <summary>Заполняет список сущностей и настраивает вкладку при запуске.</summary>
+        private void SetupEntityTab()
+        {
+            cmbEntityType.Items.Clear();
+            cmbEntityType.Items.Add(new EntityTypeItem(typeof(Workout), "Тренировки (Service<Workout>)"));
+            cmbEntityType.Items.Add(new EntityTypeItem(typeof(Lap), "Круги (Service<Lap>)"));
+            cmbEntityType.SelectedIndex = 0;   // вызовет cmbEntityType_SelectedIndexChanged
+        }
+
+        /// <summary>Смена сущности: перестраиваем список фильтров, столбцы таблицы и данные.</summary>
+        private void cmbEntityType_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            bool isWorkout = SelectedEntityIsWorkout();
+
+            cmbFilter.Items.Clear();
+            if (isWorkout)
+                foreach (FilterOption<Workout> f in EntityFilters.Workouts) cmbFilter.Items.Add(f);
+            else
+                foreach (FilterOption<Lap> f in EntityFilters.Laps) cmbFilter.Items.Add(f);
+            cmbFilter.SelectedIndex = 0;
+
+            ConfigureEntityGridColumns(isWorkout);
+            RefreshEntityGrid();
+        }
+
+        private void cmbFilter_SelectedIndexChanged(object? sender, EventArgs e) => RefreshEntityGrid();
+
+        private void btnApplyFilter_Click(object? sender, EventArgs e) => RefreshEntityGrid();
+
+        private bool SelectedEntityIsWorkout() =>
+            (cmbEntityType.SelectedItem as EntityTypeItem)?.EntityType != typeof(Lap);
+
+        /// <summary>
+        /// Получает данные через обобщённый сервис с учётом выбранного фильтра
+        /// и выводит их в DataGridView.
+        /// </summary>
+        private void RefreshEntityGrid()
+        {
+            if (cmbFilter.SelectedItem == null) return;
+
+            try
+            {
+                Cursor = Cursors.WaitCursor;
+                double minDistance = (double)numMinDistance.Value;
+                string lambdaText;
+                int total;
+
+                if (SelectedEntityIsWorkout())
+                {
+                    var option = (FilterOption<Workout>)cmbFilter.SelectedItem;
+
+                    // Итоговое условие = выбранный фильтр И дополнительное условие по дистанции.
+                    // Оба условия – делегаты Predicate<Workout>, заданные лямбда-выражениями.
+                    Predicate<Workout> predicate = w => option.Predicate(w) && w.Distance >= minDistance;
+                    lambdaText = minDistance > 0 ? $"w => ({option.LambdaText}) && w.Distance >= {minDistance}" : option.LambdaText;
+
+                    List<Workout> result = _workoutService.Get(predicate, w => w.Laps);   // Service<Workout>.Get(Predicate<Workout>)
+                    total = _workoutService.Count();
+                    dgvEntities.DataSource = result.OrderByDescending(w => w.StartTime).ToList();
+                    ShowFilterResult(result.Count, total, "тренировок", lambdaText);
+                }
+                else
+                {
+                    var option = (FilterOption<Lap>)cmbFilter.SelectedItem;
+
+                    Predicate<Lap> predicate = l => option.Predicate(l) && l.Distance >= minDistance;
+                    lambdaText = minDistance > 0 ? $"l => ({option.LambdaText}) && l.Distance >= {minDistance}" : option.LambdaText;
+
+                    List<Lap> result = _lapService.Get(predicate, l => l.Workout!);          // Service<Lap>.Get(Predicate<Lap>)
+                    total = _lapService.Count();
+                    dgvEntities.DataSource = result.OrderBy(l => l.WorkoutId).ThenBy(l => l.EndTime).ToList();
+                    ShowFilterResult(result.Count, total, "кругов", lambdaText);
+                }
+
+                dgvEntities.ClearSelection();
+            }
+            catch (Exception ex)
+            {
+                ShowError("Не удалось получить данные через обобщённый сервис: " + RootMessage(ex));
+            }
+            finally
+            {
+                Cursor = Cursors.Default;
+            }
+        }
+
+        private void ShowFilterResult(int found, int total, string noun, string lambdaText)
+        {
+            lblFilterResult.Text = $"Найдено {found} из {total} {noun}.   Условие: {lambdaText}";
+        }
+
+        /// <summary>Кнопка «Найти по Id»: демонстрация метода GetById обобщённого сервиса.</summary>
+        private void btnFindById_Click(object? sender, EventArgs e)
+        {
+            int id = (int)numFindId.Value;
+            try
+            {
+                if (SelectedEntityIsWorkout())
+                {
+                    Workout? w = _workoutService.GetById(id, w => w.Laps);
+                    dgvEntities.DataSource = w == null ? new List<Workout>() : new List<Workout> { w };
+                    lblFilterResult.Text = w == null
+                        ? $"Service<Workout>.GetById({id}) вернул null – тренировки с таким Id нет."
+                        : $"Service<Workout>.GetById({id}): {w.ActivityName}, {w.StartTime:dd.MM.yyyy HH:mm}, {w.Distance:N0} м, кругов: {w.Laps.Count}.";
+                }
+                else
+                {
+                    Lap? l = _lapService.GetById(id, l => l.Workout!);
+                    dgvEntities.DataSource = l == null ? new List<Lap>() : new List<Lap> { l };
+                    lblFilterResult.Text = l == null
+                        ? $"Service<Lap>.GetById({id}) вернул null – круга с таким Id нет."
+                        : $"Service<Lap>.GetById({id}): круг № {l.Number} ({l.LapType}) тренировки #{l.WorkoutId}, {l.Distance:N0} м.";
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowError("Ошибка при поиске по Id: " + RootMessage(ex));
+            }
+        }
+
+        /// <summary>Двойной клик по строке: открыть тренировку (для круга – его тренировку).</summary>
+        private void dgvEntities_CellDoubleClick(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            int workoutId = dgvEntities.Rows[e.RowIndex].DataBoundItem switch
+            {
+                Workout w => w.Id,
+                Lap l => l.WorkoutId,
+                _ => 0
+            };
+            if (workoutId == 0) return;
+
+            LoadWorkoutFromDatabase(workoutId);
+            RefreshSavedWorkouts(selectId: workoutId);
+            tabMain.SelectedTab = tabLaps;
+        }
+
+        /// <summary>Столбцы таблицы сущностей – свои для каждой сущности.</summary>
+        private void ConfigureEntityGridColumns(bool isWorkout)
+        {
+            dgvEntities.AutoGenerateColumns = false;
+            dgvEntities.DataSource = null;
+            dgvEntities.Columns.Clear();
+
+            if (isWorkout)
+            {
+                dgvEntities.Columns.Add(TextColumn(nameof(Workout.Id), "Id", 45, DataGridViewContentAlignment.MiddleCenter));
+                dgvEntities.Columns.Add(TextColumn(nameof(Workout.StartTime), "Дата и время", 120, DataGridViewContentAlignment.MiddleCenter, "dd.MM.yyyy HH:mm"));
+                dgvEntities.Columns.Add(TextColumn(nameof(Workout.ActivityName), "Вид активности", 150));
+                dgvEntities.Columns.Add(TextColumn(nameof(Workout.DurationText), "Длительность", 85, DataGridViewContentAlignment.MiddleCenter));
+                dgvEntities.Columns.Add(TextColumn(nameof(Workout.Distance), "Дистанция, м", 90, DataGridViewContentAlignment.MiddleRight, "N0"));
+                dgvEntities.Columns.Add(TextColumn(nameof(Workout.LapCount), "Кругов", 60, DataGridViewContentAlignment.MiddleCenter));
+                dgvEntities.Columns.Add(TextColumn(nameof(Workout.StepCount), "Шагов", 70, DataGridViewContentAlignment.MiddleRight, "N0"));
+                dgvEntities.Columns.Add(TextColumn(nameof(Workout.AvgHeartRate), "Пульс ср.", 70, DataGridViewContentAlignment.MiddleRight, "0"));
+                dgvEntities.Columns.Add(TextColumn(nameof(Workout.Energy), "Энергия, Дж", 90, DataGridViewContentAlignment.MiddleRight, "N0"));
+                var file = TextColumn(nameof(Workout.FileName), "Файл", 160);
+                file.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                dgvEntities.Columns.Add(file);
+            }
+            else
+            {
+                dgvEntities.Columns.Add(TextColumn(nameof(Lap.Id), "Id", 45, DataGridViewContentAlignment.MiddleCenter));
+                dgvEntities.Columns.Add(TextColumn(nameof(Lap.WorkoutId), "Id трен.", 60, DataGridViewContentAlignment.MiddleCenter));
+                dgvEntities.Columns.Add(TextColumn(nameof(Lap.WorkoutName), "Тренировка", 160));
+                dgvEntities.Columns.Add(TextColumn(nameof(Lap.Number), "№", 45, DataGridViewContentAlignment.MiddleCenter));
+                dgvEntities.Columns.Add(TextColumn(nameof(Lap.LapType), "Тип", 70));
+                dgvEntities.Columns.Add(TextColumn(nameof(Lap.EndTime), "Окончание", 120, DataGridViewContentAlignment.MiddleCenter, "dd.MM.yyyy HH:mm:ss"));
+                dgvEntities.Columns.Add(TextColumn(nameof(Lap.Duration), "Длительность, с", 95, DataGridViewContentAlignment.MiddleRight, "0.0"));
+                dgvEntities.Columns.Add(TextColumn(nameof(Lap.Distance), "Дистанция, м", 90, DataGridViewContentAlignment.MiddleRight, "N0"));
+                dgvEntities.Columns.Add(TextColumn(nameof(Lap.AvgSpeedKmh), "Скорость, км/ч", 95, DataGridViewContentAlignment.MiddleRight, "0.00"));
+                var hr = TextColumn(nameof(Lap.AvgHeartRate), "Пульс ср.", 80, DataGridViewContentAlignment.MiddleRight, "0");
+                hr.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                dgvEntities.Columns.Add(hr);
+            }
+
+            dgvEntities.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            dgvEntities.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvEntities.DefaultCellStyle.NullValue = "—";
         }
 
         // ------------------------------------------------------------------

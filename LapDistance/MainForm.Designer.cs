@@ -53,11 +53,6 @@
             lblDateCaption = new Label();
             lblDurationCaption = new Label();
             lblActivityCaption = new Label();
-            grpLaps = new GroupBox();
-            dgvLaps = new DataGridView();
-            cmbLapFilter = new ComboBox();
-            lblSummary = new Label();
-            lblLapFilterCaption = new Label();
             grpMessages = new GroupBox();
             txtMessages = new TextBox();
             btnSaveToDb = new Button();
@@ -65,10 +60,36 @@
             lblSavedCaption = new Label();
             cmbSavedWorkouts = new ComboBox();
             btnLoadFromDb = new Button();
+            tabMain = new TabControl();
+            tabLaps = new TabPage();
+            grpLaps = new GroupBox();
+            dgvLaps = new DataGridView();
+            cmbLapFilter = new ComboBox();
+            lblSummary = new Label();
+            lblLapFilterCaption = new Label();
+            tabService = new TabPage();
+            dgvEntities = new DataGridView();
+            numFindId = new NumericUpDown();
+            lblFilterResult = new Label();
+            lblFindCaption = new Label();
+            btnFindById = new Button();
+            btnApplyFilter = new Button();
+            numMinDistance = new NumericUpDown();
+            lblMinDistance = new Label();
+            lblFilterCaption = new Label();
+            cmbFilter = new ComboBox();
+            cmbEntityType = new ComboBox();
+            lblEntityCaption = new Label();
             grpInfo.SuspendLayout();
+            grpMessages.SuspendLayout();
+            tabMain.SuspendLayout();
+            tabLaps.SuspendLayout();
             grpLaps.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvLaps).BeginInit();
-            grpMessages.SuspendLayout();
+            tabService.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvEntities).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numFindId).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numMinDistance).BeginInit();
             SuspendLayout();
             // 
             // btnOpenFile
@@ -328,72 +349,11 @@
             lblActivityCaption.TabIndex = 0;
             lblActivityCaption.Text = "Вид активности:";
             // 
-            // grpLaps
-            // 
-            grpLaps.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            grpLaps.Controls.Add(dgvLaps);
-            grpLaps.Controls.Add(cmbLapFilter);
-            grpLaps.Controls.Add(lblSummary);
-            grpLaps.Controls.Add(lblLapFilterCaption);
-            grpLaps.Location = new Point(12, 271);
-            grpLaps.Name = "grpLaps";
-            grpLaps.Size = new Size(1060, 464);
-            grpLaps.TabIndex = 4;
-            grpLaps.TabStop = false;
-            grpLaps.Text = "Анализ дистанции по кругам";
-            // 
-            // dgvLaps
-            // 
-            dgvLaps.AllowUserToAddRows = false;
-            dgvLaps.AllowUserToDeleteRows = false;
-            dgvLaps.AllowUserToResizeColumns = false;
-            dgvLaps.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            dgvLaps.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvLaps.BackgroundColor = SystemColors.Window;
-            dgvLaps.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvLaps.Location = new Point(12, 98);
-            dgvLaps.MultiSelect = false;
-            dgvLaps.Name = "dgvLaps";
-            dgvLaps.ReadOnly = true;
-            dgvLaps.RowHeadersVisible = false;
-            dgvLaps.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvLaps.Size = new Size(1035, 353);
-            dgvLaps.TabIndex = 3;
-            // 
-            // cmbLapFilter
-            // 
-            cmbLapFilter.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbLapFilter.Enabled = false;
-            cmbLapFilter.FormattingEnabled = true;
-            cmbLapFilter.Location = new Point(160, 23);
-            cmbLapFilter.Name = "cmbLapFilter";
-            cmbLapFilter.Size = new Size(121, 23);
-            cmbLapFilter.TabIndex = 2;
-            cmbLapFilter.SelectedIndexChanged += cmbLapFilter_SelectedIndexChanged;
-            // 
-            // lblSummary
-            // 
-            lblSummary.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            lblSummary.Location = new Point(12, 58);
-            lblSummary.Name = "lblSummary";
-            lblSummary.Size = new Size(1035, 36);
-            lblSummary.TabIndex = 1;
-            lblSummary.Text = "Сводка по кругам появится после загрузки файла.";
-            // 
-            // lblLapFilterCaption
-            // 
-            lblLapFilterCaption.AutoSize = true;
-            lblLapFilterCaption.Location = new Point(12, 27);
-            lblLapFilterCaption.Name = "lblLapFilterCaption";
-            lblLapFilterCaption.Size = new Size(134, 15);
-            lblLapFilterCaption.TabIndex = 0;
-            lblLapFilterCaption.Text = "Анализируемые круги:";
-            // 
             // grpMessages
             // 
             grpMessages.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             grpMessages.Controls.Add(txtMessages);
-            grpMessages.Location = new Point(12, 742);
+            grpMessages.Location = new Point(12, 703);
             grpMessages.Name = "grpMessages";
             grpMessages.Size = new Size(1060, 88);
             grpMessages.TabIndex = 5;
@@ -464,18 +424,248 @@
             btnLoadFromDb.UseVisualStyleBackColor = true;
             btnLoadFromDb.Click += btnLoadFromDb_Click;
             // 
+            // tabMain
+            // 
+            tabMain.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            tabMain.Controls.Add(tabLaps);
+            tabMain.Controls.Add(tabService);
+            tabMain.Location = new Point(12, 271);
+            tabMain.Name = "tabMain";
+            tabMain.SelectedIndex = 0;
+            tabMain.Size = new Size(1060, 425);
+            tabMain.TabIndex = 11;
+            // 
+            // tabLaps
+            // 
+            tabLaps.Controls.Add(grpLaps);
+            tabLaps.Location = new Point(4, 24);
+            tabLaps.Name = "tabLaps";
+            tabLaps.Padding = new Padding(3);
+            tabLaps.Size = new Size(1052, 397);
+            tabLaps.TabIndex = 0;
+            tabLaps.Text = "Анализ дистанции по кругам";
+            tabLaps.UseVisualStyleBackColor = true;
+            // 
+            // grpLaps
+            // 
+            grpLaps.Controls.Add(dgvLaps);
+            grpLaps.Controls.Add(cmbLapFilter);
+            grpLaps.Controls.Add(lblSummary);
+            grpLaps.Controls.Add(lblLapFilterCaption);
+            grpLaps.Dock = DockStyle.Fill;
+            grpLaps.Location = new Point(3, 3);
+            grpLaps.Name = "grpLaps";
+            grpLaps.Size = new Size(1046, 391);
+            grpLaps.TabIndex = 5;
+            grpLaps.TabStop = false;
+            grpLaps.Text = "Анализ дистанции по кругам";
+            // 
+            // dgvLaps
+            // 
+            dgvLaps.AllowUserToAddRows = false;
+            dgvLaps.AllowUserToDeleteRows = false;
+            dgvLaps.AllowUserToResizeColumns = false;
+            dgvLaps.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dgvLaps.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvLaps.BackgroundColor = SystemColors.Window;
+            dgvLaps.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvLaps.Location = new Point(12, 98);
+            dgvLaps.MultiSelect = false;
+            dgvLaps.Name = "dgvLaps";
+            dgvLaps.ReadOnly = true;
+            dgvLaps.RowHeadersVisible = false;
+            dgvLaps.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvLaps.Size = new Size(1881, 644);
+            dgvLaps.TabIndex = 3;
+            // 
+            // cmbLapFilter
+            // 
+            cmbLapFilter.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbLapFilter.Enabled = false;
+            cmbLapFilter.FormattingEnabled = true;
+            cmbLapFilter.Location = new Point(160, 23);
+            cmbLapFilter.Name = "cmbLapFilter";
+            cmbLapFilter.Size = new Size(121, 23);
+            cmbLapFilter.TabIndex = 2;
+            cmbLapFilter.SelectedIndexChanged += cmbLapFilter_SelectedIndexChanged;
+            // 
+            // lblSummary
+            // 
+            lblSummary.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            lblSummary.Location = new Point(12, 58);
+            lblSummary.Name = "lblSummary";
+            lblSummary.Size = new Size(1881, 36);
+            lblSummary.TabIndex = 1;
+            lblSummary.Text = "Сводка по кругам появится после загрузки файла.";
+            // 
+            // lblLapFilterCaption
+            // 
+            lblLapFilterCaption.AutoSize = true;
+            lblLapFilterCaption.Location = new Point(12, 27);
+            lblLapFilterCaption.Name = "lblLapFilterCaption";
+            lblLapFilterCaption.Size = new Size(134, 15);
+            lblLapFilterCaption.TabIndex = 0;
+            lblLapFilterCaption.Text = "Анализируемые круги:";
+            // 
+            // tabService
+            // 
+            tabService.Controls.Add(dgvEntities);
+            tabService.Controls.Add(numFindId);
+            tabService.Controls.Add(lblFilterResult);
+            tabService.Controls.Add(lblFindCaption);
+            tabService.Controls.Add(btnFindById);
+            tabService.Controls.Add(btnApplyFilter);
+            tabService.Controls.Add(numMinDistance);
+            tabService.Controls.Add(lblMinDistance);
+            tabService.Controls.Add(lblFilterCaption);
+            tabService.Controls.Add(cmbFilter);
+            tabService.Controls.Add(cmbEntityType);
+            tabService.Controls.Add(lblEntityCaption);
+            tabService.Location = new Point(4, 24);
+            tabService.Name = "tabService";
+            tabService.Padding = new Padding(3);
+            tabService.Size = new Size(1052, 397);
+            tabService.TabIndex = 1;
+            tabService.Text = "Обобщённый сервис Service<T> и фильтрация";
+            tabService.UseVisualStyleBackColor = true;
+            // 
+            // dgvEntities
+            // 
+            dgvEntities.AllowUserToAddRows = false;
+            dgvEntities.AllowUserToDeleteRows = false;
+            dgvEntities.AllowUserToResizeRows = false;
+            dgvEntities.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dgvEntities.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvEntities.BackgroundColor = SystemColors.Window;
+            dgvEntities.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvEntities.Location = new Point(8, 76);
+            dgvEntities.MultiSelect = false;
+            dgvEntities.Name = "dgvEntities";
+            dgvEntities.ReadOnly = true;
+            dgvEntities.RowHeadersVisible = false;
+            dgvEntities.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvEntities.Size = new Size(1036, 312);
+            dgvEntities.TabIndex = 12;
+            dgvEntities.CellDoubleClick += dgvEntities_CellDoubleClick;
+            // 
+            // numFindId
+            // 
+            numFindId.Location = new Point(90, 42);
+            numFindId.Maximum = new decimal(new int[] { 1000000, 0, 0, 0 });
+            numFindId.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numFindId.Name = "numFindId";
+            numFindId.Size = new Size(70, 23);
+            numFindId.TabIndex = 11;
+            numFindId.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            // 
+            // lblFilterResult
+            // 
+            lblFilterResult.AutoSize = true;
+            lblFilterResult.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 204);
+            lblFilterResult.Location = new Point(275, 46);
+            lblFilterResult.Name = "lblFilterResult";
+            lblFilterResult.Size = new Size(0, 15);
+            lblFilterResult.TabIndex = 10;
+            // 
+            // lblFindCaption
+            // 
+            lblFindCaption.AutoSize = true;
+            lblFindCaption.Location = new Point(8, 46);
+            lblFindCaption.Name = "lblFindCaption";
+            lblFindCaption.Size = new Size(74, 15);
+            lblFindCaption.TabIndex = 9;
+            lblFindCaption.Text = "Найти по Id:";
+            // 
+            // btnFindById
+            // 
+            btnFindById.Location = new Point(168, 40);
+            btnFindById.Name = "btnFindById";
+            btnFindById.Size = new Size(90, 27);
+            btnFindById.TabIndex = 8;
+            btnFindById.Text = "Найти";
+            btnFindById.UseVisualStyleBackColor = true;
+            btnFindById.Click += btnFindById_Click;
+            // 
+            // btnApplyFilter
+            // 
+            btnApplyFilter.Location = new Point(951, 5);
+            btnApplyFilter.Name = "btnApplyFilter";
+            btnApplyFilter.Size = new Size(95, 27);
+            btnApplyFilter.TabIndex = 7;
+            btnApplyFilter.Text = "Применить";
+            btnApplyFilter.UseVisualStyleBackColor = true;
+            btnApplyFilter.Click += btnApplyFilter_Click;
+            // 
+            // numMinDistance
+            // 
+            numMinDistance.Increment = new decimal(new int[] { 100, 0, 0, 0 });
+            numMinDistance.Location = new Point(857, 8);
+            numMinDistance.Maximum = new decimal(new int[] { 1000000, 0, 0, 0 });
+            numMinDistance.Name = "numMinDistance";
+            numMinDistance.Size = new Size(80, 23);
+            numMinDistance.TabIndex = 6;
+            numMinDistance.TextAlign = HorizontalAlignment.Right;
+            numMinDistance.ThousandsSeparator = true;
+            // 
+            // lblMinDistance
+            // 
+            lblMinDistance.AutoSize = true;
+            lblMinDistance.Location = new Point(706, 12);
+            lblMinDistance.Name = "lblMinDistance";
+            lblMinDistance.Size = new Size(145, 15);
+            lblMinDistance.TabIndex = 5;
+            lblMinDistance.Text = "и дистанция не менее, м:";
+            // 
+            // lblFilterCaption
+            // 
+            lblFilterCaption.AutoSize = true;
+            lblFilterCaption.Location = new Point(291, 12);
+            lblFilterCaption.Name = "lblFilterCaption";
+            lblFilterCaption.Size = new Size(133, 15);
+            lblFilterCaption.TabIndex = 4;
+            lblFilterCaption.Text = "Фильтр (Predicate<T>):";
+            // 
+            // cmbFilter
+            // 
+            cmbFilter.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbFilter.FormattingEnabled = true;
+            cmbFilter.Location = new Point(430, 8);
+            cmbFilter.Name = "cmbFilter";
+            cmbFilter.Size = new Size(270, 23);
+            cmbFilter.TabIndex = 2;
+            cmbFilter.SelectedIndexChanged += cmbFilter_SelectedIndexChanged;
+            // 
+            // cmbEntityType
+            // 
+            cmbEntityType.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbEntityType.FormattingEnabled = true;
+            cmbEntityType.Location = new Point(75, 8);
+            cmbEntityType.Name = "cmbEntityType";
+            cmbEntityType.Size = new Size(210, 23);
+            cmbEntityType.TabIndex = 1;
+            cmbEntityType.SelectedIndexChanged += cmbEntityType_SelectedIndexChanged;
+            // 
+            // lblEntityCaption
+            // 
+            lblEntityCaption.AutoSize = true;
+            lblEntityCaption.Location = new Point(8, 12);
+            lblEntityCaption.Name = "lblEntityCaption";
+            lblEntityCaption.Size = new Size(66, 15);
+            lblEntityCaption.TabIndex = 0;
+            lblEntityCaption.Text = "Сущность:";
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1084, 841);
+            Controls.Add(tabMain);
             Controls.Add(btnLoadFromDb);
             Controls.Add(cmbSavedWorkouts);
             Controls.Add(lblSavedCaption);
             Controls.Add(lblDataSource);
             Controls.Add(btnSaveToDb);
             Controls.Add(grpMessages);
-            Controls.Add(grpLaps);
             Controls.Add(grpInfo);
             Controls.Add(lblFileName);
             Controls.Add(lblFileCaption);
@@ -487,11 +677,18 @@
             Load += MainForm_Load;
             grpInfo.ResumeLayout(false);
             grpInfo.PerformLayout();
+            grpMessages.ResumeLayout(false);
+            grpMessages.PerformLayout();
+            tabMain.ResumeLayout(false);
+            tabLaps.ResumeLayout(false);
             grpLaps.ResumeLayout(false);
             grpLaps.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvLaps).EndInit();
-            grpMessages.ResumeLayout(false);
-            grpMessages.PerformLayout();
+            tabService.ResumeLayout(false);
+            tabService.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvEntities).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numFindId).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numMinDistance).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -523,11 +720,6 @@
         private Label lblDateCaption;
         private Label lblDurationCaption;
         private Label lblActivityCaption;
-        private GroupBox grpLaps;
-        private DataGridView dgvLaps;
-        private ComboBox cmbLapFilter;
-        private Label lblSummary;
-        private Label lblLapFilterCaption;
         private GroupBox grpMessages;
         private TextBox txtMessages;
         private Button btnSaveToDb;
@@ -535,5 +727,26 @@
         private Label lblSavedCaption;
         private ComboBox cmbSavedWorkouts;
         private Button btnLoadFromDb;
+        private TabControl tabMain;
+        private TabPage tabLaps;
+        private TabPage tabService;
+        private GroupBox grpLaps;
+        private DataGridView dgvLaps;
+        private ComboBox cmbLapFilter;
+        private Label lblSummary;
+        private Label lblLapFilterCaption;
+        private Label lblMinDistance;
+        private Label lblFilterCaption;
+        private ComboBox comboBox3;
+        private ComboBox cmbFilter;
+        private ComboBox cmbEntityType;
+        private Label lblEntityCaption;
+        private Button btnApplyFilter;
+        private NumericUpDown numMinDistance;
+        private NumericUpDown numFindId;
+        private Label lblFilterResult;
+        private Label lblFindCaption;
+        private Button btnFindById;
+        private DataGridView dgvEntities;
     }
 }
